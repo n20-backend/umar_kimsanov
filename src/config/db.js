@@ -2,13 +2,19 @@ import pkg from 'pg';
 const { Pool } = pkg;
 
 const pool = new Pool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASS,
-  database: process.env.DB_NAME,
-  port: process.env.DB_PORT,
+    user: "postgres",
+    host: "localhost",
+    database: "todo",
+    password: "1005",
+    port: 5432, 
 });
 
-const query = (text, params) => pool.query(text, params);
+pool.connect((err) => {
+    if (err) {
+        console.error("Database:", err.message);
+    } else {
+        console.log("Connected");
+    }
+})
 
-export { pool, query };
+export default pool;

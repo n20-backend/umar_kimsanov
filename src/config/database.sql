@@ -1,4 +1,5 @@
 CREATE DATABASE ToDo;
+create extension "uuid-ossp";
 
 
 CREATE TYPE role_role AS ENUM ('user', 'admin', 'moderator');
@@ -7,15 +8,16 @@ CREATE TYPE status_task AS ENUM ('pending', 'in_progress', 'completed');
 
 
 CREATE TABLE users (
-    user_id UUID PRIMARY KEY,
+    user_id UUID PRIMARY KEY default uuid_generate_v4(),
     email VARCHAR(255) NOT NULL UNIQUE,
     username VARCHAR(255) NOT NULL UNIQUE,
     password TEXT NOT NULL,
     role role_role DEFAULT 'user',
     role_status user_role_status DEFAULT 'active',
-    created_at TIMESTAMP NOT NULL DEFAULT now(),
-    updated_at TIMESTAMP NOT NULL DEFAULT now()
+    created_at TIMESTAMP  DEFAULT now(),
+    updated_at TIMESTAMP  DEFAULT now()
 );
+--not added yet
 
 CREATE TABLE lists (
     list_id UUID PRIMARY KEY,
