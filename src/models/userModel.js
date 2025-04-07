@@ -1,31 +1,44 @@
 import pool from '../config/db.js';
 
+export const createUser = async (userData) => {
+  const { email, username, password } = userData;
+  const result = await pool.query(
+    `INSERT INTO users (email, username, password)
+     VALUES ($1, $2, $3)
+     RETURNING user_id, email, username`,
+    [email, username, password]
+  );
+  return result.rows[0];
+};
+
 export const getUsers = async () => {
-  const result = await pool.query("SELECT * FROM users");
+  const result = await pool.query(
+    'SELECT user_id, email, username FROM users'
+  );
   return result.rows;
 };
 
-export const getUserID = async (id) => {
-  const result = await pool.query("SELECT * FROM users WHERE user_id = $1", [id]);
+export const getUserById = async (id) => {
+  const result = await pool.query(
+    'SELECT user_id, email, username FROM users WHERE user_id = $1',
+    [id]
+  );
   return result.rows[0];
-}
+};
 
-export const createNewUser = async (user) => {
-  const { email, username, password } = user;
-  const result = await pool.query("INSERT INTO users (email, username, password) VALUES ($1, $2, $3) RETURNING *", [email, username, password]);
+export const updateUser = async (id, userData) => {
+  const { email, username, password } = userData;
+  const result = await pool.query(
+    `UPDATE users
+     SET email = $1, username = $2, password = $3
+     WHERE user_id = $4
+     RETURNING user_id, email, username`,
+    [email, username, password, id]
+  );
   return result.rows[0];
-}
+};
 
-//not fixed
-// export const updateUserByID = async (id, user) => {
-//   const { name, email } = user;
-//   const result = await pool.query("UPDATE users SET name = $1, email = $2 WHERE id = $3 RETURNING *", [name, email, id]);
-//   return result.rows[0];
-// }
-
-export const deleteUserByID = async (id) => {
-  const result = await pool.query("Delete FROM users WHERE user_id = $1;", [id]);
-  return {
-    "message": "User deleted",
-  };
-}
+export const deleteUser = async (id) => {
+  await pool.query('DELETE FROM users WHERE user_id = $1', [id]);
+  return { message: 'User deleted' };
+};

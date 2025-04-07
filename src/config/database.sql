@@ -20,7 +20,7 @@ CREATE TABLE users (
 --not added yet
 
 CREATE TABLE lists (
-    list_id UUID PRIMARY KEY,
+    list_id UUID PRIMARY KEY default uuid_generate_v4(),
     title VARCHAR(255) NOT NULL,
     description TEXT,
     owner_id UUID NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
@@ -29,7 +29,7 @@ CREATE TABLE lists (
 );
 
 CREATE TABLE priorities (
-    priority_id UUID PRIMARY KEY,
+    priority_id UUID PRIMARY KEY default uuid_generate_v4(),
     priority_name VARCHAR(255) NOT NULL,
     level SMALLINT DEFAULT 1 CHECK (level BETWEEN 1 AND 3),
     created_at TIMESTAMP NOT NULL DEFAULT now(),
@@ -37,7 +37,7 @@ CREATE TABLE priorities (
 );
 
 CREATE TABLE tasks (
-    task_id UUID PRIMARY KEY,
+    task_id UUID PRIMARY KEY default uuid_generate_v4(),
     title VARCHAR(255) NOT NULL,
     description TEXT,
     list_id UUID NOT NULL REFERENCES lists(list_id) ON DELETE CASCADE,
@@ -49,7 +49,7 @@ CREATE TABLE tasks (
 );
 
 CREATE TABLE tags (
-    tag_id UUID PRIMARY KEY,
+    tag_id UUID PRIMARY KEY default uuid_generate_v4(),
     tag_name VARCHAR(255) NOT NULL UNIQUE,
     created_at TIMESTAMP NOT NULL DEFAULT now(),
     updated_at TIMESTAMP NOT NULL DEFAULT now()
